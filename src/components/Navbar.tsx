@@ -17,7 +17,7 @@ export const Navbar = () => {
 					className="btn-ghost btn relative aspect-video h-full"
 				>
 					<Image
-						className="object-contain px-2 py-1 pointer-events-none"
+						className="object-contain px-1 md:px-2 py-1 pointer-events-none"
 						src="/biazoka-store.png"
 						alt="Logo da Biazoka Store"
 						fill
