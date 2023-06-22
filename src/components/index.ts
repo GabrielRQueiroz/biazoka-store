@@ -1,4 +1,3 @@
-import { Navbar } from "./Navbar";
-import { Alert } from "./Alert";
+import { Navbar } from './Navbar';
 
-export { Navbar , Alert};
+export { Navbar };

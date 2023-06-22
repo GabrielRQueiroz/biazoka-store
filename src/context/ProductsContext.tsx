@@ -6,6 +6,7 @@ import { get, onValue, ref, remove, set, update } from 'firebase/database';
 import { useRouter } from 'next/navigation';
 import { createContext, useContext, useEffect, useState } from 'react';
 import { UserContext } from './UserContext';
+import {toast, Toaster} from 'react-hot-toast'
 
 type ProductsContextType = {
 	cartItemsCount: number;
@@ -140,6 +141,8 @@ export const ProductsProvider = ({ children }: any) => {
 						);
 				}
 			});
+
+			toast.success('Produto adicionado à sacola')
 		}
 	};
 
@@ -200,6 +203,12 @@ export const ProductsProvider = ({ children }: any) => {
 
 			remove(cartRef);
 
+			toast.success(`Compra realizada com sucesso! 🥳`, {
+				position: 'top-center',
+				duration: 10000,
+				className: 'alert alert-primary'
+			});
+
 			router.refresh();
 		}
 	};
@@ -216,6 +225,7 @@ export const ProductsProvider = ({ children }: any) => {
 				buyCartItems,
 			}}
 		>
+			<Toaster />
 			{children}
 		</ProductsContext.Provider>
 	);
