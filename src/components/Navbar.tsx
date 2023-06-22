@@ -18,7 +18,7 @@ export const Navbar = () => {
 				>
 					<Image
 						className="object-contain px-1 md:px-2 py-1 pointer-events-none"
-						src="/biazoka-store.png"
+						src="/biazoka-store.webp"
 						alt="Logo da Biazoka Store"
 						fill
 					/>

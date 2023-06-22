@@ -22,7 +22,7 @@ export default function Bag() {
 		<main className="flex flex-row flex-wrap gap-4 bg-base-100 p-6 py-32 sm:px-16 md:px-20">
 			<section className="flex flex-1 flex-col gap-4">
 				{cartItems.map((product) => (
-					<CartCard product={product} removeFromCart={removeFromCart} />
+					<CartCard key={product.id} product={product} removeFromCart={removeFromCart} />
 				))}
 			</section>
 			<aside className="grow-1 w-full sm:w-auto sm:grow-0">

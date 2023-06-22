@@ -9,6 +9,7 @@ const inter = Inter({ subsets: ['latin'] });
 export const metadata = {
 	title: 'Biazoka Store 🛍️',
 	description: 'A loja da Bia 💖',
+	icon: '/biazoka-store.webp',
 };
 
 export default function RootLayout({

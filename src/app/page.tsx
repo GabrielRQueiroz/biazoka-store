@@ -33,7 +33,7 @@ export default function Home() {
 							</figure>
 							<div className="card-body">
 								<div className="flex flex-row items-center justify-between">
-									<p className="badge badge-neutral grow-0 text-neutral-content">
+									<p className="badge badge-outline badge-neutral grow-0 text-neutral-content">
 										{product.category}
 									</p>
 								</div>
@@ -50,7 +50,7 @@ export default function Home() {
 											onClick={() => addToCart(product.id)}
 											disabled={product.quantity === 0 || !user}
 											className={clsx(
-												'btn-primary btn-sm btn',
+												'btn-sm btn',
 												product.quantity === 0 &&
 													'btn-disabled cursor-not-allowed',
 											)}
