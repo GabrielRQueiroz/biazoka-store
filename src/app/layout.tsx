@@ -8,15 +8,27 @@ import './globals.css';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-	title: 'Biazoka Store 🛍️',
+	applicationName: 'Biazoka Store',
+	openGraph: {
+		type: 'website',
+		locale: 'pt_BR',
+		url: 'https://biazoka-store.vercel.app/',
+		siteName: 'Biazoka Store',
+		description: 'A loja da Bia 💖',
+		images: [
+			{
+				url: 'https://biazoka-store.vercel.app/og.webp',
+				width: 1024,
+				height: 1024,
+			},
+		],
+	},
+	title: {
+		template: '%s | Biazoka Store 🛍️',
+		default: 'Biazoka Store 🛍️',
+	},
 	description: 'A loja da Bia 💖',
-	icons: [
-		{
-			url: '/biazoka-store.webp',
-			rel: 'icon',
-			type: 'image/webp',
-		},
-	],
+	manifest: '/site.webmanifest',
 };
 
 export default function RootLayout({
