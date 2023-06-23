@@ -12,7 +12,9 @@ type AuthContextProviderProps = {
 
 type AuthContextType = {
 	user: UserType | undefined;
+	isAdmin: boolean;
 	authLoading: boolean;
+	accessAsAdmin: (password: string) => void;
 	login: () => void;
 	logout: () => void;
 };
@@ -21,6 +23,7 @@ export const UserContext = createContext({} as AuthContextType);
 
 export const UserProvider = ({ children }: AuthContextProviderProps) => {
 	const [user, setUser] = useState<UserType>();
+	const [isAdmin, setIsAdmin] = useState<boolean>(false);
 	const [authLoading, setAuthLoading] = useState<boolean>(true);
 
 	useEffect(() => {
@@ -109,12 +112,22 @@ export const UserProvider = ({ children }: AuthContextProviderProps) => {
 		});
 	};
 
+	const accessAsAdmin = async (password: string) => {
+		const adminPassword = process.env.NEXT_PUBLIC_ADMIN_PASSWORD;
+
+		if (password === adminPassword) {
+			setIsAdmin(true);
+		}
+	}
+
 	return (
 		<UserContext.Provider
 			value={{
 				user,
+				isAdmin,
 				login,
 				logout,
+				accessAsAdmin,
 				authLoading,
 			}}
 		>

@@ -18,3 +18,11 @@ export type UserType = {
    balance: number;
    cart: CartItemType[];
 }
+
+export type HistoryEntryType = {
+   entryId: string;
+   user: Omit<UserType, 'cart'>;
+   date: string;
+   products: ProductType[];
+   cost: number;
+}

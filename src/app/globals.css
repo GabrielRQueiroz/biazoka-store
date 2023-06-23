@@ -28,7 +28,8 @@ body {
 
 /* Cute scrollbar */
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 4px;
+  height: 4px;
 }
 
 ::-webkit-scrollbar-track {
@@ -37,7 +38,7 @@ body {
 
 ::-webkit-scrollbar-thumb {
   background: hsl(var(--n));
-  border-radius: 10px;
+  border-radius: 12px;
 }
 
 ::-webkit-scrollbar-thumb:hover {

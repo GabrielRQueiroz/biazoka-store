@@ -2,7 +2,7 @@
 
 import { ProductsContext } from '@/context/ProductsContext';
 import { UserContext } from '@/context/UserContext';
-import { Coins, ShoppingBag, SignOut } from '@phosphor-icons/react';
+import { Coins, ShoppingBag, SignOut, Storefront } from '@phosphor-icons/react';
 import clsx from 'clsx';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -10,11 +10,11 @@ import { useContext } from 'react';
 
 export const Navbar = () => {
 	return (
-		<nav className="navbar fixed z-10 h-28 bg-base-100 px-2 text-base-content shadow sm:px-8">
+		<nav className="navbar fixed z-10 h-24 sm:h-28 bg-base-100 px-4 text-base-content shadow sm:px-8">
 			<div className="h-full flex-1">
 				<Link
 					href="/"
-					className="btn-ghost btn relative aspect-video h-full"
+					className="btn-ghost btn relative aspect-square md:aspect-video h-full"
 				>
 					<Image
 						className="object-contain px-1 md:px-2 py-1 pointer-events-none"
@@ -24,7 +24,10 @@ export const Navbar = () => {
 					/>
 				</Link>
 			</div>
-			<div className="flex-none gap-4">
+			<div className="flex-none gap-2 sm:gap-4">
+				<Link className="btn btn-ghost btn-circle" href="/armazem">
+					<Storefront size={32} />
+				</Link>
 				<NavbarCart />
 				<NavbarUser />
 			</div>
@@ -40,7 +43,7 @@ const NavbarCart = () => {
 			<label tabIndex={0} className="btn-ghost btn-circle btn">
 				<div className="indicator">
 					<ShoppingBag size={32} />
-					<span className="badge badge-primary badge-sm indicator-item">
+					<span className="badge badge-neutral badge-sm indicator-item">
 						{cartItemsCount}
 					</span>
 				</div>

@@ -1,12 +1,13 @@
 'use client';
 
 import { database } from '@/lib/firebase';
-import { CartItemType, ProductType } from '@/lib/types';
+import { CartItemType, HistoryEntryType, ProductType } from '@/lib/types';
 import { get, onValue, ref, remove, set, update } from 'firebase/database';
 import { useRouter } from 'next/navigation';
 import { createContext, useContext, useEffect, useState } from 'react';
+import { Toaster, toast } from 'react-hot-toast';
+import { v4 as uuidv4 } from 'uuid';
 import { UserContext } from './UserContext';
-import {toast, Toaster} from 'react-hot-toast'
 
 type ProductsContextType = {
 	cartItemsCount: number;
@@ -16,6 +17,7 @@ type ProductsContextType = {
 	removeFromCart: (productId: string) => void;
 	productsList: ProductType[];
 	buyCartItems: () => void;
+	historyList: HistoryEntryType[];
 };
 
 export const ProductsContext = createContext({} as ProductsContextType);
@@ -27,6 +29,7 @@ export const ProductsProvider = ({ children }: any) => {
 	const [cartTotal, setCartTotal] = useState<number>(0);
 	const [cartItems, setCartItems] = useState<CartItemType[]>([]);
 	const [productsList, setProductsList] = useState<ProductType[]>([]);
+	const [historyList, setHistoryList] = useState<HistoryEntryType[]>([]);
 
 	useEffect(() => {
 		const productsRef = ref(database, `products`);
@@ -106,6 +109,28 @@ export const ProductsProvider = ({ children }: any) => {
 		}
 	}, [user, productsList]);
 
+	useEffect(() => {
+		const historyRef = ref(database, `history`);
+
+		onValue(historyRef, (snapshot) => {
+			const history: HistoryEntryType[] = [];
+
+			if (!snapshot.exists()) {
+				setHistoryList([]);
+				return;
+			}
+
+			snapshot.forEach((historyItem) => {
+				history.push({
+					id: historyItem.key,
+					...historyItem.val(),
+				});
+			});
+
+			setHistoryList(history);
+		});
+	}, []);
+
 	const addToCart = async (productId: string) => {
 		if (user) {
 			const productRef = ref(database, `products/${productId}`);
@@ -142,7 +167,7 @@ export const ProductsProvider = ({ children }: any) => {
 				}
 			});
 
-			toast.success('Produto adicionado à sacola')
+			toast.success('Produto adicionado à sacola');
 		}
 	};
 
@@ -188,9 +213,29 @@ export const ProductsProvider = ({ children }: any) => {
 
 			const cartRef = ref(database, `users/${user.id}/cart`);
 			const userRef = ref(database, `users/${user.id}`);
+			const timestamp = new Date();
+
+			const historyEntry: Omit<HistoryEntryType, 'entryId'> = {
+				user: {
+					...user,
+				},
+				date: timestamp.toLocaleTimeString('pt-BR', {
+					weekday: 'long',
+					day: 'numeric',
+					month: 'long',
+					year: 'numeric',
+					hour: 'numeric',
+					minute: 'numeric',
+					second: undefined,
+				}),
+				products: cartItems,
+				cost: cartTotal,
+			};
 
 			await get(cartRef).then((snapshot) => {
 				if (snapshot.exists()) {
+					const purchaseId = uuidv4();
+
 					snapshot.forEach((cartItem) => {
 						const { price, quantity }: CartItemType = cartItem.val();
 
@@ -198,6 +243,8 @@ export const ProductsProvider = ({ children }: any) => {
 							balance: user.balance - price * quantity,
 						});
 					});
+
+					set(ref(database, `history/${purchaseId}`), historyEntry);
 				}
 			});
 
@@ -206,7 +253,7 @@ export const ProductsProvider = ({ children }: any) => {
 			toast.success(`Compra realizada com sucesso! 🥳`, {
 				position: 'top-center',
 				duration: 10000,
-				className: 'alert alert-primary'
+				className: 'alert alert-primary',
 			});
 
 			router.refresh();
@@ -223,6 +270,7 @@ export const ProductsProvider = ({ children }: any) => {
 				cartItems,
 				productsList,
 				buyCartItems,
+				historyList,
 			}}
 		>
 			<Toaster />

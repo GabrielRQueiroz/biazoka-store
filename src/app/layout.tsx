@@ -1,15 +1,22 @@
 import { Navbar } from '@/components';
 import { ProductsProvider } from '@/context/ProductsContext';
 import { UserProvider } from '@/context/UserContext';
+import { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 
 const inter = Inter({ subsets: ['latin'] });
 
-export const metadata = {
+export const metadata: Metadata = {
 	title: 'Biazoka Store 🛍️',
 	description: 'A loja da Bia 💖',
-	icon: '/biazoka-store.webp',
+	icons: [
+		{
+			url: '/biazoka-store.webp',
+			rel: 'icon',
+			type: 'image/webp',
+		},
+	],
 };
 
 export default function RootLayout({
