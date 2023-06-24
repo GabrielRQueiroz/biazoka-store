@@ -134,7 +134,7 @@ export const ProductsProvider = ({ children }: any) => {
 				});
 			});
 
-			history.sort((a, b) => a.timestamp - b.timestamp);
+			history.sort().reverse();
 
 			setHistoryList(history);
 		});
