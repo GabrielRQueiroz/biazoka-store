@@ -26,3 +26,12 @@ export type HistoryEntryType = {
    products: ProductType[];
    cost: number;
 }
+
+export enum FoodTypes {
+   'Fast food' = 'Fast food 🍔',
+   'Refeição' =  'Refeição 🍛',
+   'Salgado' =  'Salgado 🥟',
+   'Bebida' =  'Bebida 🥤',
+   'Doce' =  'Doce 🍩',
+   'Lanche' =  'Lanche 🥪',
+}

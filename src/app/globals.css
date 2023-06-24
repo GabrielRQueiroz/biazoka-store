@@ -34,6 +34,7 @@ body {
 
 ::-webkit-scrollbar-track {
   background: transparent;
+  overflow: hidden
 }
 
 ::-webkit-scrollbar-thumb {

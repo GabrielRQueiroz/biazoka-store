@@ -19,109 +19,123 @@ export default function Bag() {
 	} = useContext(ProductsContext);
 
 	return (
-		<main className="flex flex-row flex-wrap gap-4 bg-base-100 p-6 py-32 sm:px-16 md:px-20">
-			<section className="flex flex-1 flex-col gap-4">
-				{cartItems.map((product) => (
-					<CartCard key={product.id} product={product} removeFromCart={removeFromCart} />
-				))}
-			</section>
-			<aside className="grow-1 w-full sm:w-auto sm:grow-0">
-				<div className="card card-compact shadow-xl sm:card-normal">
-					<div className="card-body">
-						<h2 className="card-title text-base-content">Resumo</h2>
-						<div className="overflow-x-auto">
-							<table className="table-xs table sm:table-sm">
-								<thead>
-									<tr>
-										<th>Item</th>
-										<th>Preço</th>
-									</tr>
-								</thead>
+		<main className="flex justify-center bg-base-100 p-6 py-32 sm:px-16 md:px-20">
+			<div className="flex w-full max-w-sm flex-row flex-wrap justify-center gap-4 sm:max-w-7xl">
+				<section className="flex max-w-xl flex-1 flex-col gap-4">
+					{cartItems.map((product) => (
+						<CartCard
+							key={product.id}
+							product={product}
+							removeFromCart={removeFromCart}
+						/>
+					))}
+				</section>
+				<aside className="grow-1 w-full sm:w-auto sm:grow-0">
+					<div className="card card-compact shadow-xl sm:card-normal">
+						<div className="card-body">
+							<h2 className="card-title text-base-content">Resumo</h2>
+							<div className="overflow-x-auto">
+								<table className="table-xs table sm:table-sm">
+									<thead>
+										<tr>
+											<th>Item</th>
+											<th>Preço</th>
+										</tr>
+									</thead>
 
-								<tbody>
-									{cartItems.map((product) => (
-										<tr
-											className="text-base-content"
-											key={product.id}
-										>
-											<td className="text-ellipsis">
-												{product.name}
-											</td>
+									<tbody>
+										{cartItems.map((product) => (
+											<tr
+												className="text-base-content"
+												key={product.id}
+											>
+												<td className="text-ellipsis">
+													{product.name}
+												</td>
+												<td>
+													<CoinVertical
+														className="inline"
+														size={16}
+													/>
+													{product.price * product.quantity}{' '}
+												</td>
+											</tr>
+										))}
+									</tbody>
+									<tfoot>
+										<tr className="text-base-content">
+											<td>Total:</td>
 											<td>
-												<CoinVertical
-													className="inline"
-													size={16}
-												/>
-												{product.price * product.quantity}{' '}
+												<Coins className="inline" size={16} />{' '}
+												{cartTotal}
 											</td>
 										</tr>
-									))}
-								</tbody>
-								<tfoot>
-									<tr className="text-base-content">
-										<td>Total:</td>
-										<td>
-											<Coins className="inline" size={16} />{' '}
-											{cartTotal}
-										</td>
-									</tr>
-								</tfoot>
-							</table>
-						</div>
+									</tfoot>
+								</table>
+							</div>
 
-						<div className="card-actions justify-center">
-							<button
-								type="button"
-								disabled={
-									!user ||
-									user.balance < cartTotal ||
-									cartItemsCount === 0
-								}
-								onClick={() => {
-									const dialog = document.getElementById(
-										'purchase_confirmation',
-									) as HTMLDialogElement;
-									dialog.showModal();
-								}}
-								className={clsx(
-									'btn mt-4',
-									!user ||
-										cartItemsCount === 0 ||
-										(user.balance < cartTotal &&
-											'cursor-not-allowed'),
-								)}
-							>
-								{user && user.balance < cartTotal ? (
-									<>Saldo insuficiente</>
-								) : (
-									<>Finalizar compra</>
-								)}
-							</button>
+							<div className="card-actions justify-center">
+								<button
+									type="button"
+									disabled={
+										!user ||
+										user.balance < cartTotal ||
+										cartItemsCount === 0
+									}
+									onClick={() => {
+										const dialog = document.getElementById(
+											'purchase_confirmation',
+										) as HTMLDialogElement;
+										dialog.showModal();
+									}}
+									className={clsx(
+										'btn mt-4',
+										!user ||
+											cartItemsCount === 0 ||
+											(user.balance < cartTotal &&
+												'cursor-not-allowed'),
+									)}
+								>
+									{user && user.balance < cartTotal ? (
+										<>Saldo insuficiente</>
+									) : (
+										<>Finalizar compra</>
+									)}
+								</button>
 
-							<dialog id="purchase_confirmation" className="modal">
-								<form method="dialog" className="modal-box">
-									<h3 className="text-lg font-bold">COMPRAR ITENS</h3>
-									<p className="py-4">
-										Tem CERTEZA ABSOLUTA de que você quer comprar
-										esses itens?
-									</p>
-									<div className="modal-action">
-										<button
-											onClick={buyCartItems}
-											className="btn-primary btn-outline btn"
-										>
-											Comprar
-										</button>
-										<button className="btn-warning btn text-warning-content">
-											Cancelar
-										</button>
-									</div>
-								</form>
-							</dialog>
+								<dialog
+									id="purchase_confirmation"
+									className="modal modal-bottom sm:modal-middle"
+								>
+									<form method="dialog" className="modal-box">
+										<h3 className="text-lg font-bold">
+											COMPRAR ITENS
+										</h3>
+										<p className="py-4">
+											Tem CERTEZA ABSOLUTA de que você quer comprar
+											esses itens?
+										</p>
+										<div className="modal-action">
+											<button
+												onClick={buyCartItems}
+												className="btn-neutral btn-outline btn"
+											>
+												Comprar
+											</button>
+											<button className="btn">
+												Cancelar
+											</button>
+										</div>
+									</form>
+									<form method="dialog" className="modal-backdrop">
+										<button>fechar</button>
+									</form>
+								</dialog>
+							</div>
 						</div>
 					</div>
-				</div>
-			</aside>
+				</aside>
+			</div>
 		</main>
 	);
 }
@@ -136,7 +150,7 @@ const CartCard = ({
 	return (
 		<div
 			key={product.id}
-			className="card-compact card bg-base-100 shadow-lg md:card-side"
+			className="card-compact card-bordered card bg-base-100 shadow-lg md:card-side"
 		>
 			<figure className="relative aspect-square h-40 w-full md:h-full md:w-40">
 				<Image
@@ -171,11 +185,11 @@ const CartCard = ({
 							type="button"
 							disabled={product.quantity === 0}
 							className={clsx(
-								'btn-primary btn-sm btn w-full text-xs text-primary-content md:text-sm',
+								'btn-error btn-outline btn-sm btn w-full text-xs md:text-sm',
 								product.quantity === 0 && 'btn-disabled',
 							)}
 						>
-							Remover <Trash className="inline" size={24} />
+							Remover <Trash className="inline" size={20} />
 						</button>
 					</div>
 				</div>

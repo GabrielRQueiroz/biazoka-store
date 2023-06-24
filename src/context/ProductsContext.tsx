@@ -1,7 +1,7 @@
 'use client';
 
 import { database } from '@/lib/firebase';
-import { CartItemType, HistoryEntryType, ProductType } from '@/lib/types';
+import { CartItemType, HistoryEntryType, ProductType, FoodTypes } from '@/lib/types';
 import { get, onValue, ref, remove, set, update } from 'firebase/database';
 import { useRouter } from 'next/navigation';
 import { createContext, useContext, useEffect, useState } from 'react';
@@ -18,6 +18,13 @@ type ProductsContextType = {
 	productsList: ProductType[];
 	buyCartItems: () => void;
 	historyList: HistoryEntryType[];
+	handlePriceChange: (action: "INCREASE"|"DECREASE", productId: string) => void;
+	handleQuantityChange: (action: "INCREASE"|"DECREASE", productId: string) => void;
+	handleImageUrlChange: (imageUrl: string, productId: string) => void;
+	handleFoodTypeChange:(type: FoodTypes, productId: string) => void;
+	handleFoodRename: (name: string, productId: string) => void;
+	deleteFood: (productId: string) => void;
+	createFood: (product: Omit<ProductType, 'id'>) => void;
 };
 
 export const ProductsContext = createContext({} as ProductsContextType);
@@ -78,12 +85,13 @@ export const ProductsProvider = ({ children }: any) => {
 				}
 
 				snapshot.forEach((cartItem) => {
-					const { category, imageUrl, name }: ProductType =
+					const { category, imageUrl, price, name }: ProductType =
 						productsList.find((product) => product.id === cartItem.key)!;
 
 					cartItems.push({
 						id: cartItem.key,
 						...cartItem.val(),
+						price,
 						category,
 						imageUrl,
 						name,
@@ -167,7 +175,9 @@ export const ProductsProvider = ({ children }: any) => {
 				}
 			});
 
-			toast.success('Produto adicionado à sacola');
+			toast.success('Produto adicionado à sacola', {
+				position: 'bottom-center',
+			});
 		}
 	};
 
@@ -251,15 +261,95 @@ export const ProductsProvider = ({ children }: any) => {
 			remove(cartRef);
 
 			toast.success(`Compra realizada com sucesso! 🥳`, {
-				position: 'top-center',
+				position: 'bottom-center',
 				duration: 10000,
 				className: 'alert alert-primary',
 			});
 
 			router.refresh();
 		}
+		
 	};
 
+	const handlePriceChange = (action: string, productId: string) => {
+		const productRef = ref(database, `products/${productId}`);
+
+		get(productRef).then((product) => {
+			if (product.exists()) {
+				const { price }: ProductType = product.val();
+
+				if (action === 'INCREASE') {
+					update(productRef, {
+						price: price + 1,
+					});
+				} else {
+					update(productRef, {
+						price: price - 1,
+					});
+				}
+			}
+		});
+	} 
+
+	const handleQuantityChange = (action: string, productId: string) => {
+		const productRef = ref(database, `products/${productId}`);
+
+		get(productRef).then((product) => {
+			if (product.exists()) {
+				const { quantity }: ProductType = product.val();
+
+				if (action === 'INCREASE') {
+					update(productRef, {
+						quantity: quantity + 1,
+					});
+				} else {
+					update(productRef, {
+						quantity: quantity - 1,
+					});
+				}
+			}
+		});
+	}
+
+	const handleFoodTypeChange = (type: FoodTypes, productId: string) => {
+		const productRef = ref(database, `products/${productId}`);
+
+		update(productRef, {
+			category: type,
+		});
+	} 
+
+	const handleFoodRename = (name: string, productId: string) => {
+		const productRef = ref(database, `products/${productId}`);
+
+		update(productRef, {
+			name,
+		});
+
+		toast.success("O novo nome foi salvo 👍")
+	} 
+
+	const handleImageUrlChange = (imageUrl: string, productId: string) => {
+		const productRef = ref(database, `products/${productId}`);
+
+		update(productRef, {
+			imageUrl,
+		});
+
+		toast.success("A imagem foi alterada 🖼️")
+	}
+
+	const deleteFood = (productId: string) => {
+		const productRef = ref(database, `products/${productId}`);
+
+		remove(productRef)
+		toast.success("O novo nome foi apagado (para sempre) 🗑️")
+	}
+
+	const createFood = (product: Omit<ProductType, 'id'>) => {
+		const productId = uuidv4()
+	}
+	
 	return (
 		<ProductsContext.Provider
 			value={{
@@ -271,6 +361,13 @@ export const ProductsProvider = ({ children }: any) => {
 				productsList,
 				buyCartItems,
 				historyList,
+				handlePriceChange,
+				handleQuantityChange,
+				handleImageUrlChange,
+				handleFoodTypeChange,
+				handleFoodRename,
+				deleteFood,
+				createFood
 			}}
 		>
 			<Toaster />

@@ -16,7 +16,7 @@ export default function Home() {
 					productsList.map((product) => (
 						<div
 							key={product.id}
-							className="card card-compact max-w-[240px] flex-1 bg-base-100 shadow-lg"
+							className="card card-bordered card-compact max-w-[240px] flex-1 bg-base-100 shadow-lg"
 						>
 							<figure className="pointer-events-none relative aspect-square">
 								<div className="badge badge-neutral absolute right-0 top-0 z-[5] mr-2 mt-2">
