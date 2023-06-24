@@ -22,7 +22,7 @@ export type UserType = {
 export type HistoryEntryType = {
    entryId: string;
    user: Omit<UserType, 'cart'>;
-   date: string;
+   timestamp: number;
    products: ProductType[];
    cost: number;
 }

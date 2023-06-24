@@ -1,7 +1,7 @@
 'use client';
 
 import { database } from '@/lib/firebase';
-import { CartItemType, HistoryEntryType, ProductType, FoodTypes } from '@/lib/types';
+import { CartItemType, FoodTypes, HistoryEntryType, ProductType } from '@/lib/types';
 import { get, onValue, ref, remove, set, update } from 'firebase/database';
 import { useRouter } from 'next/navigation';
 import { createContext, useContext, useEffect, useState } from 'react';
@@ -18,10 +18,10 @@ type ProductsContextType = {
 	productsList: ProductType[];
 	buyCartItems: () => void;
 	historyList: HistoryEntryType[];
-	handlePriceChange: (action: "INCREASE"|"DECREASE", productId: string) => void;
-	handleQuantityChange: (action: "INCREASE"|"DECREASE", productId: string) => void;
+	handlePriceChange: (action: 'INCREASE' | 'DECREASE', productId: string) => void;
+	handleQuantityChange: (action: 'INCREASE' | 'DECREASE', productId: string) => void;
 	handleImageUrlChange: (imageUrl: string, productId: string) => void;
-	handleFoodTypeChange:(type: FoodTypes, productId: string) => void;
+	handleFoodTypeChange: (type: FoodTypes, productId: string) => void;
 	handleFoodRename: (name: string, productId: string) => void;
 	deleteFood: (productId: string) => void;
 	createFood: (product: Omit<ProductType, 'id'>) => void;
@@ -85,8 +85,9 @@ export const ProductsProvider = ({ children }: any) => {
 				}
 
 				snapshot.forEach((cartItem) => {
-					const { category, imageUrl, price, name }: ProductType =
-						productsList.find((product) => product.id === cartItem.key)!;
+					const { category, imageUrl, price, name }: ProductType = productsList.find(
+						(product) => product.id === cartItem.key,
+					)!;
 
 					cartItems.push({
 						id: cartItem.key,
@@ -97,19 +98,8 @@ export const ProductsProvider = ({ children }: any) => {
 						name,
 					});
 
-					setCartItemsCount(
-						cartItems.reduce(
-							(total, cartItem) => total + cartItem.quantity,
-							0,
-						),
-					);
-					setCartTotal(
-						cartItems.reduce(
-							(total, cartItem) =>
-								total + cartItem.price * cartItem.quantity,
-							0,
-						),
-					);
+					setCartItemsCount(cartItems.reduce((total, cartItem) => total + cartItem.quantity, 0));
+					setCartTotal(cartItems.reduce((total, cartItem) => total + cartItem.price * cartItem.quantity, 0));
 
 					setCartItems(cartItems);
 				});
@@ -135,6 +125,8 @@ export const ProductsProvider = ({ children }: any) => {
 				});
 			});
 
+			history.sort((a, b) => b.timestamp - a.timestamp);
+
 			setHistoryList(history);
 		});
 	}, []);
@@ -147,10 +139,7 @@ export const ProductsProvider = ({ children }: any) => {
 				if (snapshot.exists() && snapshot.val().quantity > 0) {
 					const { price, quantity }: ProductType = snapshot.val();
 
-					const cartItemRef = ref(
-						database,
-						`users/${user.id}/cart/${productId}`,
-					);
+					const cartItemRef = ref(database, `users/${user.id}/cart/${productId}`);
 
 					get(cartItemRef)
 						.then((cartItem) => {
@@ -183,10 +172,7 @@ export const ProductsProvider = ({ children }: any) => {
 
 	const removeFromCart = (productId: string) => {
 		if (user) {
-			const cartItemRef = ref(
-				database,
-				`users/${user.id}/cart/${productId}`,
-			);
+			const cartItemRef = ref(database, `users/${user.id}/cart/${productId}`);
 			const productRef = ref(database, `products/${productId}`);
 
 			get(cartItemRef).then((cartItem) => {
@@ -223,21 +209,12 @@ export const ProductsProvider = ({ children }: any) => {
 
 			const cartRef = ref(database, `users/${user.id}/cart`);
 			const userRef = ref(database, `users/${user.id}`);
-			const timestamp = new Date();
 
 			const historyEntry: Omit<HistoryEntryType, 'entryId'> = {
 				user: {
 					...user,
 				},
-				date: timestamp.toLocaleTimeString('pt-BR', {
-					weekday: 'long',
-					day: 'numeric',
-					month: 'long',
-					year: 'numeric',
-					hour: 'numeric',
-					minute: 'numeric',
-					second: undefined,
-				}),
+				timestamp: Date.now(),
 				products: cartItems,
 				cost: cartTotal,
 			};
@@ -268,7 +245,6 @@ export const ProductsProvider = ({ children }: any) => {
 
 			router.refresh();
 		}
-		
 	};
 
 	const handlePriceChange = (action: string, productId: string) => {
@@ -289,7 +265,7 @@ export const ProductsProvider = ({ children }: any) => {
 				}
 			}
 		});
-	} 
+	};
 
 	const handleQuantityChange = (action: string, productId: string) => {
 		const productRef = ref(database, `products/${productId}`);
@@ -309,7 +285,7 @@ export const ProductsProvider = ({ children }: any) => {
 				}
 			}
 		});
-	}
+	};
 
 	const handleFoodTypeChange = (type: FoodTypes, productId: string) => {
 		const productRef = ref(database, `products/${productId}`);
@@ -317,7 +293,7 @@ export const ProductsProvider = ({ children }: any) => {
 		update(productRef, {
 			category: type,
 		});
-	} 
+	};
 
 	const handleFoodRename = (name: string, productId: string) => {
 		const productRef = ref(database, `products/${productId}`);
@@ -326,8 +302,8 @@ export const ProductsProvider = ({ children }: any) => {
 			name,
 		});
 
-		toast.success("O novo nome foi salvo 👍")
-	} 
+		toast.success('O novo nome foi salvo 👍');
+	};
 
 	const handleImageUrlChange = (imageUrl: string, productId: string) => {
 		const productRef = ref(database, `products/${productId}`);
@@ -336,20 +312,20 @@ export const ProductsProvider = ({ children }: any) => {
 			imageUrl,
 		});
 
-		toast.success("A imagem foi alterada 🖼️")
-	}
+		toast.success('A imagem foi alterada 🖼️');
+	};
 
 	const deleteFood = (productId: string) => {
 		const productRef = ref(database, `products/${productId}`);
 
-		remove(productRef)
-		toast.success("O novo nome foi apagado (para sempre) 🗑️")
-	}
+		remove(productRef);
+		toast.success('O novo nome foi apagado (para sempre) 🗑️');
+	};
 
 	const createFood = (product: Omit<ProductType, 'id'>) => {
-		const productId = uuidv4()
-	}
-	
+		const productId = uuidv4();
+	};
+
 	return (
 		<ProductsContext.Provider
 			value={{
@@ -367,7 +343,7 @@ export const ProductsProvider = ({ children }: any) => {
 				handleFoodTypeChange,
 				handleFoodRename,
 				deleteFood,
-				createFood
+				createFood,
 			}}
 		>
 			<Toaster />

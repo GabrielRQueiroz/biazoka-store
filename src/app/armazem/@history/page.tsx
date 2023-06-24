@@ -2,8 +2,8 @@
 
 import { ProductsContext } from '@/context/ProductsContext';
 import { Coins } from '@phosphor-icons/react';
-import { useContext } from 'react';
 import Image from 'next/image';
+import { useContext } from 'react';
 
 export default function HistoryList() {
 	const { historyList } = useContext(ProductsContext);
@@ -34,12 +34,9 @@ export default function HistoryList() {
 										</div>
 									</div>
 									<div className="whitespace-nowrap">
-										<div className="font-bold">
-											{historyItem.user.name}
-										</div>
+										<div className="font-bold">{historyItem.user.name}</div>
 										<p className="text-xs">
-											Tinha {historyItem.user.balance}{' '}
-											<Coins className="inline" size={16} />
+											Tinha {historyItem.user.balance} <Coins className="inline" size={16} />
 										</p>
 									</div>
 								</div>
@@ -47,17 +44,24 @@ export default function HistoryList() {
 							<td>
 								<ul>
 									{historyItem.products.map((product) => (
-										<li
-											className="whitespace-nowrap"
-											key={product.id}
-										>
+										<li className="whitespace-nowrap" key={product.id}>
 											{product.quantity}x {product.name}
 										</li>
 									))}
 								</ul>
 							</td>
 							<td className="w-full whitespace-nowrap text-xs uppercase sm:text-sm">
-								<span>{historyItem.date}</span>
+								<span>
+									{new Date(historyItem.timestamp).toLocaleTimeString('pt-BR', {
+										weekday: 'long',
+										day: 'numeric',
+										month: 'long',
+										year: 'numeric',
+										hour: 'numeric',
+										minute: 'numeric',
+										second: undefined,
+									})}
+								</span>
 							</td>
 						</tr>
 					))}
