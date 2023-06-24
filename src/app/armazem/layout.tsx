@@ -5,10 +5,6 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 
-export const metadata: Metadata = {
-	title: 'Armazém',
-};
-
 export default function WarehouseLayout({
 	warehouse,
 	history,
