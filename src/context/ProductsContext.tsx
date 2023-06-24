@@ -122,6 +122,15 @@ export const ProductsProvider = ({ children }: any) => {
 				history.push({
 					id: historyItem.key,
 					...historyItem.val(),
+					timestamp: new Date(historyItem.val().timestamp).toLocaleTimeString('pt-BR', {
+						weekday: 'long',
+						day: 'numeric',
+						month: 'long',
+						year: 'numeric',
+						hour: 'numeric',
+						minute: 'numeric',
+						second: undefined,
+					}),
 				});
 			});
 

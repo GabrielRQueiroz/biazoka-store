@@ -52,15 +52,7 @@ export default function HistoryList() {
 							</td>
 							<td className="w-full whitespace-nowrap text-xs uppercase sm:text-sm">
 								<span>
-									{new Date(historyItem.timestamp).toLocaleTimeString('pt-BR', {
-										weekday: 'long',
-										day: 'numeric',
-										month: 'long',
-										year: 'numeric',
-										hour: 'numeric',
-										minute: 'numeric',
-										second: undefined,
-									})}
+									{historyItem.timestamp}
 								</span>
 							</td>
 						</tr>
