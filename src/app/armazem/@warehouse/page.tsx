@@ -208,7 +208,7 @@ const ItemCreation = () => {
 	const [imageMethod, setImageMethod] = useState<'IMAGEM' | 'PESQUISA'>('PESQUISA');
 	const [imageQuery, setImageQuery] = useState<string>('');
 	const [imageList, setImageList] = useState<string[]>([]);
-	const [loadingSearch, setLoadingSearch] = useState<boolean>(false)
+	const [loadingSearch, setLoadingSearch] = useState<boolean>(false);
 	const [product, setProduct] = useState<Omit<ProductType, 'id'>>({
 		name: '',
 		imageUrl: '',
@@ -219,8 +219,8 @@ const ItemCreation = () => {
 	const { createFood } = useContext(ProductsContext);
 
 	const handleImageSearch = async () => {
-		setLoadingSearch(true)
-		
+		setLoadingSearch(true);
+
 		const params = {
 			q: `comida fofo cartoon ${imageQuery}`,
 			api_key: `${process.env.NEXT_PUBLIC_SERPAPI_SEARCH_API_KEY}`,
@@ -234,13 +234,8 @@ const ItemCreation = () => {
 			safe: 'active',
 		};
 
-		const response = await fetch(`https://serpapi.com/search?${new URLSearchParams(params)}`, {
-			method: 'GET',
-			headers: {
-				Accept: 'application/json',
-			},
-		}).then((res) => {
-			setLoadingSearch(false)
+		const response = await fetch(`/api/imageSearch?${new URLSearchParams(params).toString()}`).then((res) => {
+			setLoadingSearch(false);
 			return res.json();
 		});
 
@@ -253,7 +248,7 @@ const ItemCreation = () => {
 		}
 
 		toast.success('Imagens encontradas');
-		setImageList(response.images_results.map((image: any) => image.original));
+		setImageList(response.images_results.map((image: any) => image.original).filter((image: string) => image.startsWith('https://')));
 
 		console.log(response);
 	};
@@ -395,12 +390,12 @@ const ImageEdition = ({ productId }: { productId: string }) => {
 	const [imageMethod, setImageMethod] = useState<'IMAGEM' | 'PESQUISA'>('PESQUISA');
 	const [imageQuery, setImageQuery] = useState<string>('');
 	const [imageList, setImageList] = useState<string[]>([]);
-	const [loadingSearch, setLoadingSearch] = useState<boolean>(false)
+	const [loadingSearch, setLoadingSearch] = useState<boolean>(false);
 	const [imageUrl, setImageUrl] = useState<string>('');
 	const { handleImageUrlChange } = useContext(ProductsContext);
 
 	const handleImageSearch = async () => {
-		setLoadingSearch(true)
+		setLoadingSearch(true);
 
 		const params = {
 			q: `comida fofo cartoon ${imageQuery}`,
@@ -415,13 +410,8 @@ const ImageEdition = ({ productId }: { productId: string }) => {
 			safe: 'active',
 		};
 
-		const response = await fetch(`https://serpapi.com/search?${new URLSearchParams(params)}`, {
-			method: 'GET',
-			headers: {
-				Accept: 'application/json',
-			},
-		}).then((res) => {
-			setLoadingSearch(false)
+		const response = await fetch(`/api/imageSearch?${new URLSearchParams(params).toString()}`).then((res) => {
+			setLoadingSearch(false);
 			return res.json();
 		});
 
@@ -434,7 +424,7 @@ const ImageEdition = ({ productId }: { productId: string }) => {
 		}
 
 		toast.success('Imagens encontradas');
-		setImageList(response.images_results.map((image: any) => image.original));
+		setImageList(response.images_results.map((image: any) => image.original).filter((image: string) => image.startsWith('https://')));
 
 		console.log(response);
 	};
