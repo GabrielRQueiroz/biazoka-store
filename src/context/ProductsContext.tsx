@@ -333,6 +333,17 @@ export const ProductsProvider = ({ children }: any) => {
 
 	const createFood = (product: Omit<ProductType, 'id'>) => {
 		const productId = uuidv4();
+
+		const productRef = ref(database, `products/${productId}`);
+
+		set(productRef, {
+			...product,
+			id: productId,
+		});
+
+		toast.success('O novo produto foi criado 🥳', {
+			duration: 5000,
+		});
 	};
 
 	return (

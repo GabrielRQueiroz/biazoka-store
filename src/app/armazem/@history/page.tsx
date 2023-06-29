@@ -20,7 +20,7 @@ export default function HistoryList() {
 				</thead>
 				<tbody>
 					{historyList.map((historyItem) => (
-						<tr key={historyItem.user.id}>
+						<tr key={`${historyItem.user.id}-${historyItem.timestamp}`}>
 							<td>
 								<div className="flex items-center">
 									<div className="avatar mr-3">
@@ -44,7 +44,7 @@ export default function HistoryList() {
 							<td>
 								<ul>
 									{historyItem.products.map((product) => (
-										<li className="whitespace-nowrap" key={product.id}>
+										<li className="whitespace-nowrap" key={`${historyItem.user.id}-${historyItem.timestamp}-${product.id}`}>
 											{product.quantity}x {product.name}
 										</li>
 									))}

@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from 'firebase/app';
-import { GoogleAuthProvider, getAuth } from 'firebase/auth';
+import { GoogleAuthProvider, browserSessionPersistence, getAuth } from 'firebase/auth';
 import { getDatabase } from 'firebase/database';
 
 // TODO: Add SDKs for Firebase products that you want to use
@@ -26,6 +26,8 @@ const database = getDatabase(app);
 const auth = getAuth(app);
 const authProvider = new GoogleAuthProvider();
 
+auth.setPersistence(browserSessionPersistence);
+
 authProvider.addScope('https://www.googleapis.com/auth/contacts.readonly');
 authProvider.setCustomParameters({
 	prompt: 'select_account',
@@ -33,3 +35,4 @@ authProvider.setCustomParameters({
 });
 
 export { auth, authProvider, database };
+

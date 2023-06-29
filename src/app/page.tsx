@@ -16,7 +16,7 @@ export default function Home() {
 					productsList.map((product) => (
 						<div
 							key={product.id}
-							className="card card-bordered card-compact max-w-[240px] flex-1 bg-base-100 shadow-lg"
+							className="card card-bordered card-compact max-w-[280px] flex-1 bg-base-100 shadow-lg"
 						>
 							<figure className="pointer-events-none relative aspect-square">
 								<div className="badge badge-neutral absolute right-0 top-0 z-[5] mr-2 mt-2">
@@ -38,7 +38,7 @@ export default function Home() {
 								<h2 className="card-title text-base-content">
 									{product.name}
 								</h2>
-								<div className="mt-2 flex items-center justify-between">
+								<div className="mt-auto flex items-center justify-between">
 									<p className="mr-4 flex items-center gap-1 text-base text-base-content">
 										<Coins size={24} />
 										<span>{product.price}</span>
