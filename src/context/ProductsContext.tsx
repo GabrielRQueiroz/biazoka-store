@@ -176,6 +176,10 @@ export const ProductsProvider = ({ children }: any) => {
 			toast.success('Produto adicionado à sacola', {
 				position: 'bottom-center',
 			});
+		} else {
+			toast.error('Entre com uma conta para poder comprar 👉🚪', {
+				duration: 3000
+			});
 		}
 	};
 
