@@ -60,9 +60,7 @@ const ItemCard = ({ product }: { product: ProductType }) => {
 	}, [productName, product.name]);
 
 	return (
-		<div
-			className="card-compact card-bordered card max-w-[280px] flex-1 basis-full bg-base-100 shadow-lg sm:card-side sm:max-w-lg"
-		>
+		<div className="card-compact card-bordered card max-w-[280px] flex-1 basis-full bg-base-100 shadow-lg sm:card-side sm:max-w-lg">
 			<figure className="group relative aspect-square h-auto w-full sm:h-full sm:w-auto">
 				<button
 					onClick={() => {
@@ -85,13 +83,13 @@ const ItemCard = ({ product }: { product: ProductType }) => {
 				<button
 					className="btn-ghost btn-sm btn-circle btn absolute right-0 top-0 z-[5] mr-4 mt-3 text-error"
 					onClick={() => {
-						const dialog = document.getElementById('delete_confirmation') as HTMLDialogElement;
+						const dialog = document.getElementById(`delete_confirmation-${product.id}`) as HTMLDialogElement;
 						dialog.showModal();
 					}}
 				>
 					<Trash size={20} />
 				</button>
-				<dialog id="delete_confirmation" className="modal modal-bottom sm:modal-middle">
+				<dialog id={`delete_confirmation-${product.id}`} className="modal modal-bottom sm:modal-middle">
 					<form method="dialog" className="modal-box">
 						<h3 className="text-lg font-bold">APAGAR ITEM 😱</h3>
 						<p className="py-4">
@@ -374,7 +372,15 @@ const ItemCreation = () => {
 				<div className="modal-action">
 					<button
 						disabled={product.name === '' || product.category === '' || product.imageUrl === ''}
-						onClick={() => createFood(product)}
+						onClick={() => {
+							createFood(product);
+							setProduct((prev) => ({
+								...prev,
+								name: '',
+								category: '',
+								imageUrl: '',
+							}));
+						}}
 						className="btn-neutral btn"
 					>
 						Criar
